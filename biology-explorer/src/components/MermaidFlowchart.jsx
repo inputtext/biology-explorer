@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import mermaid from 'mermaid';
 
-// Configure the visual theme of the flowcharts to match our UI
+// Configure the visual theme
 mermaid.initialize({
   startOnLoad: false,
   theme: 'base',
@@ -19,16 +19,33 @@ export default function MermaidFlowchart({ moduleData }) {
 
   useEffect(() => {
     if (chartRef.current && moduleData.chartDef) {
-      // We generate a unique ID so Mermaid doesn't get confused if multiple charts are on one page
-      const uniqueId = `mermaid-${moduleData.id.replace(/[^a-zA-Z0-9]/g, '')}`;
 
-      mermaid.render(uniqueId, moduleData.chartDef).then((result) => {
-        chartRef.current.innerHTML = result.svg;
-      }).catch((error) => {
-        console.error("Mermaid syntax error:", error);
-      });
+      // FIX: Generate a truly random ID every render to survive React's Strict Mode double-firing
+      const uniqueId = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
+
+      const renderChart = async () => {
+        try {
+          // Clear any previous failed renders
+          chartRef.current.innerHTML = '';
+
+          // Await the new async render method
+          const { svg } = await mermaid.render(uniqueId, moduleData.chartDef);
+
+          // Inject the successful SVG into the DOM
+          if (chartRef.current) {
+            chartRef.current.innerHTML = svg;
+          }
+        } catch (error) {
+          console.error("Mermaid syntax error:", error);
+          if (chartRef.current) {
+             chartRef.current.innerHTML = `<p class="text-red-500 font-bold">Chart rendering failed. Check console for syntax errors.</p>`;
+          }
+        }
+      };
+
+      renderChart();
     }
-  }, [moduleData.chartDef, moduleData.id]);
+  }, [moduleData.chartDef]);
 
   return (
     <div className="bg-[#E8DFF5] border-2 border-purple-900 rounded-2xl p-8 shadow-[4px_4px_0px_#581c87] mt-12">
@@ -38,7 +55,6 @@ export default function MermaidFlowchart({ moduleData }) {
       </div>
 
       <div className="flex justify-center bg-white p-8 rounded-xl border-2 border-purple-900/20 shadow-inner overflow-x-auto">
-        {/* The SVG will be injected right here */}
         <div ref={chartRef} className="mermaid-container flex justify-center w-full min-w-[600px]" />
       </div>
     </div>

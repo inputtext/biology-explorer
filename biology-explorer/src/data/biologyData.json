@@ -221,6 +221,43 @@
           "type": "mermaid-diagram",
           "content": "A high-level systems view of how voltage changes inside a neuron to fire a nerve impulse.",
           "chartDef": "stateDiagram-v2\n direction TB\n [*] --> RestingState : -70mV\n RestingState --> Depolarization : Stimulus (Na+ influx)\n state \"Action Potential Fired\" as AP {\n Depolarization --> Peak : Reaches +30mV\n }\n AP --> Repolarization : K+ efflux\n Repolarization --> Hyperpolarization : Overshoot (-90mV)\n Hyperpolarization --> RestingState : Na+/K+ Pump restores balance"
+        },
+        {
+          "id": "synapse-animator",
+          "title": "Synaptic Transmission",
+          "type": "interactive-synapse",
+          "content": "Watch how an electrical signal is converted into a chemical signal to cross the synaptic cleft.",
+          "steps": [
+            "1. Action potential arrives at axon terminal.",
+            "2. Synaptic vesicles fuse with the membrane.",
+            "3. Neurotransmitters are released into the cleft.",
+            "4. Receptors trigger the next electrical impulse."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "endocrine-system",
+      "title": "Endocrine Control Network",
+      "description": "Explore the body's chemical messaging system and hormonal feedback loops.",
+      "themeColor": "peach",
+      "modules": [
+        {
+          "id": "thyroid-feedback",
+          "title": "Thyroid Feedback Loop",
+          "type": "mermaid-diagram",
+          "content": "How the brain and thyroid communicate to regulate the body's baseline metabolism.",
+          "chartDef": "stateDiagram-v2\n direction TB\n Hypothalamus --> Pituitary_Gland : Releases TRH\n Pituitary_Gland --> Thyroid_Gland : Releases TSH\n Thyroid_Gland --> Target_Cells : Thyroxine (T4)\n Target_Cells --> Hypothalamus : Inhibits TRH (Negative Feedback)\n Target_Cells --> Pituitary_Gland : Inhibits TSH (Negative Feedback)"
+        },
+        {
+          "id": "hormone-receptor",
+          "title": "Bloodstream & Receptors",
+          "type": "interactive-bloodstream",
+          "content": "Not all hormones work the same way. Select a hormone type to see how it interacts with a target cell.",
+          "options": [
+            { "id": "protein", "name": "Protein Hormone (Water-Soluble)", "desc": "Binds to surface receptors. Cannot pass through the lipid membrane." },
+            { "id": "steroid", "name": "Steroid Hormone (Lipid-Soluble)", "desc": "Phases directly through the membrane to alter DNA in the nucleus." }
+          ]
         }
       ]
     }

@@ -10,6 +10,8 @@ import CardiacPump from '../components/CardiacPump';
 import QuizArena from '../components/QuizArena';
 import AnimatedFlowchart from '../components/AnimatedFlowchart';
 import MermaidFlowchart from '../components/MermaidFlowchart';
+import SynapticTransmission from '../components/SynapticTransmission';
+import BloodstreamVisualizer from '../components/BloodstreamVisualizer';
 
 export default function HubPage() {
   const { hubId } = useParams();
@@ -81,6 +83,14 @@ export default function HubPage() {
        // Add this block for Mermaid Flowcharts
        if (module.type === 'mermaid-diagram') {
          return <MermaidFlowchart key={module.id} moduleData={module} />;
+       }
+       // Add this block for the Synapse animation!
+       if (module.type === 'interactive-synapse') {
+         return <SynapticTransmission key={module.id} moduleData={module} />;
+       }
+       // Add this block for Phase 9!
+       if (module.type === 'interactive-bloodstream') {
+         return <BloodstreamVisualizer key={module.id} moduleData={module} />;
        }
 
           return null;
