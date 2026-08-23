@@ -153,6 +153,76 @@
           "content": "The heart is a muscular pump controlled by electrical impulses. Adjust the slider to see how Heart Rate (Beats Per Minute) impacts the cardiac cycle during rest versus intense exercise."
         }
       ]
+    },
+    {
+      "id": "assessment",
+      "title": "Final Assessment Arena",
+      "description": "Test your knowledge across all phases with this interactive, gamified quiz.",
+      "themeColor": "mint",
+      "modules": [
+        {
+          "id": "mastery-quiz",
+          "title": "Ecosystem Mastery Quiz",
+          "type": "gamified-quiz",
+          "content": "Answer carefully! Let's see how much you remember about cells, DNA, and human physiology.",
+          "questions": [
+            {
+              "question": "Which of the following is NOT one of the 7 characteristics of life?",
+              "options": ["Maintains Homeostasis", "Ability to move freely", "Responds to stimuli", "Reproduces"],
+              "correctAnswer": 1
+            },
+            {
+              "question": "In the cellular Mitosis timeline, during which phase do chromosomes align at the equator?",
+              "options": ["Prophase", "Anaphase", "Metaphase", "Telophase"],
+              "correctAnswer": 2
+            },
+            {
+              "question": "What is the function of the Helicase enzyme in DNA replication?",
+              "options": ["It builds new proteins", "It unzips the DNA double helix", "It transports oxygen", "It digests cellular waste"],
+              "correctAnswer": 1
+            },
+            {
+              "question": "If a resting heart rate is 60 BPM, what biological state does 170 BPM likely indicate?",
+              "options": ["Deep Sleep", "Digestion", "Intense Exercise", "Meditation"],
+              "correctAnswer": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "metabolism",
+      "title": "Energy & Metabolism",
+      "description": "Visualize the continuous flow of energy and matter through biological systems.",
+      "themeColor": "yellow",
+      "modules": [
+        {
+          "id": "photosynthesis-flow",
+          "title": "Photosynthesis Reaction Flow",
+          "type": "animated-flowchart",
+          "content": "Follow the precise path of energy. Trigger the reaction to watch sunlight transform into physical sugar.",
+          "steps": [
+            { "title": "1. Light Absorption", "desc": "Chlorophyll captures solar energy. Water (H2O) is split into oxygen and protons." },
+            { "title": "2. Energy Transfer", "desc": "The electron transport chain charges up temporary battery molecules: ATP and NADPH." },
+            { "title": "3. The Calvin Cycle", "desc": "The cell uses the ATP battery power to stitch Carbon Dioxide (CO2) into solid Glucose." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neural-control",
+      "title": "Neural Control & Coordination",
+      "description": "The high-speed electrical communication network of the human body.",
+      "themeColor": "lilac",
+      "modules": [
+        {
+          "id": "action-potential-flow",
+          "title": "Action Potential Flowchart",
+          "type": "mermaid-diagram",
+          "content": "A high-level systems view of how voltage changes inside a neuron to fire a nerve impulse.",
+          "chartDef": "stateDiagram-v2\n direction TB\n [*] --> RestingState : -70mV\n RestingState --> Depolarization : Stimulus (Na+ influx)\n state \"Action Potential Fired\" as AP {\n Depolarization --> Peak : Reaches +30mV\n }\n AP --> Repolarization : K+ efflux\n Repolarization --> Hyperpolarization : Overshoot (-90mV)\n Hyperpolarization --> RestingState : Na+/K+ Pump restores balance"
+        }
+      ]
     }
   ]
 }

@@ -7,6 +7,9 @@ import TaxonomyTree from '../components/TaxonomyTree';
 import LevelsOfOrganization from '../components/LevelsOfOrganization';
 import IsItAlive from '../components/IsItAlive';
 import CardiacPump from '../components/CardiacPump';
+import QuizArena from '../components/QuizArena';
+import AnimatedFlowchart from '../components/AnimatedFlowchart';
+import MermaidFlowchart from '../components/MermaidFlowchart';
 
 export default function HubPage() {
   const { hubId } = useParams();
@@ -67,6 +70,18 @@ export default function HubPage() {
           if (module.type === 'interactive-slider') {
             return <CardiacPump key={module.id} moduleData={module} />;
           }
+          // Add this block for Phase 6!
+          if (module.type === 'gamified-quiz') {
+            return <QuizArena key={module.id} moduleData={module} />;
+          }
+          // Add this block for Phase 7 flowcharts!
+       if (module.type === 'animated-flowchart') {
+         return <AnimatedFlowchart key={module.id} moduleData={module} />;
+       }
+       // Add this block for Mermaid Flowcharts
+       if (module.type === 'mermaid-diagram') {
+         return <MermaidFlowchart key={module.id} moduleData={module} />;
+       }
 
           return null;
         })}
