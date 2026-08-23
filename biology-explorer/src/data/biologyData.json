@@ -1,0 +1,158 @@
+{
+  "hubs": [
+    {
+      "id": "foundations",
+      "title": "Foundations of Life",
+      "description": "What actually makes something alive? Start your journey here at the absolute beginning.",
+      "themeColor": "yellow",
+      "modules": [
+        {
+          "id": "levels-of-organization",
+          "title": "Levels of Organization",
+          "type": "depth-zoom",
+          "content": "Dive deeper into the microscopic universe. Click 'Magnify' to zoom in from a full organism down to a single atom.",
+          "levels": [
+            { "depth": 1, "title": "Organism", "desc": "A macroscopic living entity, like a human, animal, or tree." },
+            { "depth": 2, "title": "Organ System", "desc": "A group of organs working together, like the respiratory or circulatory system." },
+            { "depth": 3, "title": "Organ", "desc": "A specific functioning part of the system, like the lungs or heart." },
+            { "depth": 4, "title": "Tissue", "desc": "A collection of similar cells working together to perform a specific function." },
+            { "depth": 5, "title": "Cell", "desc": "The absolute fundamental, microscopic unit of life." },
+            { "depth": 6, "title": "Organelle", "desc": "The tiny 'organs' inside a cell, like the nucleus or mitochondria." },
+            { "depth": 7, "title": "Molecule", "desc": "Chemical structures made of bonded atoms, like DNA or proteins." },
+            { "depth": 8, "title": "Atom", "desc": "The base building blocks of all matter in the universe." }
+          ]
+        },
+        {
+          "id": "is-it-alive",
+          "title": "Is It Alive? (The 7 Characteristics)",
+          "type": "drag-drop-sorter",
+          "content": "Drag the items into the correct zone. Let's see if they meet all 7 characteristics of life!",
+          "items": [
+            { "id": "plant", "name": "🌿 Fern Plant", "isAlive": true, "reason": "Correct! Plants grow, reproduce, maintain homeostasis, and are made of cells." },
+            { "id": "fire", "name": "🔥 Campfire", "isAlive": false, "reason": "Correct! Fire consumes oxygen and grows, but it lacks cells, DNA, and homeostasis." },
+            { "id": "virus", "name": "🦠 Virus", "isAlive": false, "reason": "Correct! Viruses have DNA, but cannot reproduce without a host cell. They are non-living." },
+            { "id": "bacteria", "name": "🦠 Bacteria", "isAlive": true, "reason": "Correct! Bacteria are single-celled organisms that independently perform all 7 functions of life." },
+            { "id": "crystal", "name": "💎 Quartz Crystal", "isAlive": false, "reason": "Correct! Crystals grow as minerals deposit, but they do not consume energy or respond to stimuli." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cellular-biology",
+      "title": "Cellular Biology Hub",
+      "description": "Explore the microscopic foundations of life.",
+      "themeColor": "mint",
+      "modules": [
+        {
+          "id": "organelle-inspector",
+          "title": "Organelle Inspector",
+          "type": "interactive-svg",
+          "content": "Zoom in and interact with eukaryotic cell structures.",
+          "dataPoints": [
+            { "name": "Nucleus", "function": "Stores genetic material (DNA)." },
+            { "name": "Mitochondria", "function": "Generates ATP (cellular energy)." },
+            { "name": "Ribosome", "function": "Synthesizes proteins." }
+          ]
+        },
+        {
+          "id": "mitosis-stepper",
+          "title": "Mitosis Timeline",
+          "type": "scroll-animation",
+          "content": "Scroll to step through the phases of cellular division.",
+          "phases": [
+            {
+              "title": "1. Prophase",
+              "desc": "Chromatin condenses into visible chromosomes. The nuclear envelope breaks down."
+            },
+            {
+              "title": "2. Metaphase",
+              "desc": "Chromosomes align perfectly along the equator (middle) of the cell."
+            },
+            {
+              "title": "3. Anaphase",
+              "desc": "Sister chromatids are pulled apart toward opposite poles of the cell."
+            },
+            {
+              "title": "4. Telophase",
+              "desc": "Two new nuclear envelopes form around the separated chromosomes. The cell prepares to divide."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "taxonomy",
+      "title": "Taxonomy & Classification",
+      "description": "The structural categorization of living organisms.",
+      "themeColor": "lilac",
+      "modules": [
+        {
+          "id": "taxonomic-tree",
+          "title": "The Tree of Life",
+          "type": "hierarchy-tree",
+          "content": "Click the branches to traverse the biological classification hierarchy from broad domains down to specific kingdoms.",
+          "tree": {
+            "name": "All Life",
+            "children": [
+              {
+                "name": "Domain: Eukarya",
+                "children": [
+                  { "name": "Kingdom: Animalia", "desc": "Multicellular, heterotrophic organisms." },
+                  { "name": "Kingdom: Plantae", "desc": "Multicellular, autotrophic organisms." },
+                  { "name": "Kingdom: Fungi", "desc": "Decomposers with chitin cell walls." }
+                ]
+              },
+              {
+                "name": "Domain: Bacteria",
+                "children": [
+                  { "name": "Kingdom: Eubacteria", "desc": "Prokaryotes found in everyday environments." }
+                ]
+              },
+              {
+                "name": "Domain: Archaea",
+                "children": [
+                  { "name": "Kingdom: Archaebacteria", "desc": "Prokaryotes surviving in extreme environments." }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "genetics",
+      "title": "Genetics & Molecular Hub",
+      "description": "Uncover the molecular mechanisms behind hereditary traits.",
+      "themeColor": "peach",
+      "modules": [
+        {
+          "id": "dna-unzipper",
+          "title": "DNA Helicase Unzipper",
+          "type": "interactive-timeline",
+          "content": "Inject the Helicase enzyme to break the hydrogen bonds and unzip the DNA double helix for replication.",
+          "sequence": [
+            { "left": "A", "right": "T" },
+            { "left": "C", "right": "G" },
+            { "left": "T", "right": "A" },
+            { "left": "G", "right": "C" },
+            { "left": "A", "right": "T" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "physiology",
+      "title": "Human Physiology Hub",
+      "description": "Understand the complex mechanical and electrical systems that keep the human body alive.",
+      "themeColor": "peach",
+      "modules": [
+        {
+          "id": "cardiac-pump",
+          "title": "Cardiac Rhythm & BPM",
+          "type": "interactive-slider",
+          "content": "The heart is a muscular pump controlled by electrical impulses. Adjust the slider to see how Heart Rate (Beats Per Minute) impacts the cardiac cycle during rest versus intense exercise."
+        }
+      ]
+    }
+  ]
+}
