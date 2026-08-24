@@ -2,6 +2,8 @@ import { ReactLenis } from 'lenis/react';
 import { Routes, Route, Link } from 'react-router-dom';
 import bioData from './data/biologyData.json';
 import HubPage from './pages/HubPage';
+import CustomCursor from './components/CustomCursor';
+import AmbientBackground from './components/AmbientBackground';
 
 const colorMap = {
   mint: 'bg-[#D4F0E4] border-emerald-900 shadow-[4px_4px_0px_#064e3b] text-emerald-950',
@@ -36,7 +38,13 @@ const HomeDashboard = () => (
 export default function App() {
   return (
     <ReactLenis root options={{ lerp: 0.08 }}>
-      <div className="min-h-screen bg-[#FAF9F6] text-slate-900 font-sans pb-24">
+      {/* ADDED: cursor-none right here on the main wrapper */}
+      <div className="min-h-screen bg-[#FAF9F6] text-slate-900 font-sans pb-24 cursor-none">
+
+        {/* ADDED: The Background and Cursor components */}
+        <CustomCursor />
+        <AmbientBackground />
+
         <nav className="fixed top-0 w-full bg-[#FAF9F6]/80 backdrop-blur-md border-b-2 border-slate-900 z-50 px-6 py-4">
           <div className="max-w-6xl mx-auto flex justify-between items-center">
             <Link to="/" className="text-xl font-black tracking-tighter">BioExplorer.</Link>

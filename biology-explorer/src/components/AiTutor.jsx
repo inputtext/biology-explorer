@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Initialize the Gemini API (using Vite's environment variable syntax)
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
+
 
 // Animated Message Component
 const AnimatedMessage = ({ msg }) => {
@@ -86,7 +85,7 @@ export default function AiTutor({ isOpen, onClose, currentModule }) {
     }
   }, [messages, isTyping]);
 
-  const handleSend = async (e) => {
+const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -96,30 +95,43 @@ export default function AiTutor({ isOpen, onClose, currentModule }) {
     setIsTyping(true);
 
     try {
-      // 1. Choose the fast, intelligent Gemini model
-     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+      // 1. Grab the new Groq key
+      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
-      // 2. Build a highly specific context prompt
-      const prompt = `
-        You are a highly intelligent, encouraging biology tutor built directly into an interactive web platform.
-        Keep your answers concise, accurate, and easy to read for a student.
+      // 2. Define the exact system context
+      const systemPrompt = `You are a highly intelligent, encouraging biology tutor built directly into an interactive web platform. Keep your answers concise, accurate, and easy to read for a student. The user is currently studying a module titled: "${currentModule?.title || 'Biology Overview'}". The content of this module is: "${currentModule?.content || 'General biological concepts'}".`;
 
-        The user is currently studying a module titled: "${currentModule?.title || 'Biology Overview'}".
-        The content of this module is: "${currentModule?.content || 'General biological concepts'}".
+      // 3. Fire the request to Groq's blazing-fast Llama 3.1 model
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+       body: JSON.stringify({
+          model: "mixtral-8x7b-32768", // The ultimate stable fallback
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userText }
+          ]
+        })
+      });
 
-        User's Question: ${userText}
-      `;
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error?.message || 'Failed to fetch from Groq');
+      }
 
-      // 3. Fire the request to the brain
-      const result = await model.generateContent(prompt);
-      const aiResponseText = result.response.text();
+      const data = await response.json();
 
-      // 4. Update the chat with the real answer
+      // 4. Extract the text from the standard OpenAI-style response
+      const aiResponseText = data.choices[0].message.content;
+
       setMessages(prev => [...prev, { role: 'ai', text: aiResponseText }]);
 
     } catch (error) {
-      console.error("Gemini API Error:", error);
-      setMessages(prev => [...prev, { role: 'ai', text: "Whoops! My neural pathways are misfiring. Check your API key or internet connection and try again!" }]);
+      console.error("Groq API Error:", error);
+      setMessages(prev => [...prev, { role: 'ai', text: `Network issue: ${error.message}.` }]);
     } finally {
       setIsTyping(false);
     }
