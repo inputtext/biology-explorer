@@ -260,6 +260,34 @@
           ]
         }
       ]
+    },
+    {
+      "id": "immune-system",
+      "title": "Immune System & Defense",
+      "description": "Discover how the body detects and destroys foreign pathogens to maintain health.",
+      "themeColor": "mint",
+      "modules": [
+        {
+          "id": "phagocytosis-engine",
+          "title": "Phagocytosis Battlefield",
+          "type": "interactive-macrophage",
+          "content": "Deploy a Macrophage (white blood cell) to hunt down and digest a viral pathogen in real-time."
+        }
+      ]
+    },
+    {
+      "id": "biotechnology",
+      "title": "Biotechnology & Genetics",
+      "description": "Manipulating life at the molecular level using advanced genetic engineering tools.",
+      "themeColor": "mint",
+      "modules": [
+        {
+          "id": "crispr-editor",
+          "title": "CRISPR-Cas9 Gene Editor",
+          "type": "interactive-crispr",
+          "content": "Deploy the Cas9 endonuclease complex to scan the genome, locate a target PAM sequence, and splice in a new synthetic gene."
+        }
+      ]
     }
   ]
 }
