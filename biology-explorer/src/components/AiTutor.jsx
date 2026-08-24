@@ -1,96 +1,159 @@
 import { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+// Initialize the Gemini API (using Vite's environment variable syntax)
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
+// Animated Message Component
+const AnimatedMessage = ({ msg }) => {
+  const bubbleRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(bubbleRef.current,
+      { opacity: 0, y: 20, scale: 0.9 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }
+    );
+  }, []);
+
+  return (
+    <div className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+      <div
+        ref={bubbleRef}
+        className={`max-w-[85%] p-4 text-sm font-medium leading-relaxed shadow-sm ${
+          msg.role === 'user'
+            ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm shadow-[2px_2px_0px_#1e3a8a]'
+            : 'bg-white border-2 border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm'
+        }`}
+      >
+        {msg.text}
+      </div>
+    </div>
+  );
+};
 
 export default function AiTutor({ isOpen, onClose, currentModule }) {
   const drawerRef = useRef(null);
+  const headerRef = useRef(null);
+  const chatAreaRef = useRef(null);
+  const inputRef = useRef(null);
+  const iconRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'ai', text: "Hi! I'm your BioExplorer AI. I see you're looking at the material for this phase. What questions do you have?" }
+    { role: 'ai', text: "Hi! I'm your BioExplorer AI. I can see what you're studying. Ask me anything about this topic!" }
   ]);
 
-  // Handle the GSAP Slide In/Out
+  // Cinematic Iris Reveal & Pastel Rainbow Glow
   useEffect(() => {
     if (isOpen) {
-      gsap.to(drawerRef.current, { x: 0, duration: 0.5, ease: 'power3.out', boxShadow: '-10px 0 30px rgba(0,0,0,0.1)' });
+      const tl = gsap.timeline();
+
+      tl.fromTo(drawerRef.current,
+        { clipPath: 'circle(0% at 90% 90%)', boxShadow: 'none' },
+        { clipPath: 'circle(150% at 90% 90%)', duration: 0.8, ease: 'power3.inOut', boxShadow: '-15px 0 40px rgba(0,0,0,0.15)' }
+      );
+
+      tl.fromTo([headerRef.current, chatAreaRef.current, inputRef.current],
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.2)' },
+        "-=0.4"
+      );
+
+      const rainbowTl = gsap.timeline({ delay: 0.6 });
+      rainbowTl.to(drawerRef.current, { boxShadow: '-10px 0 40px 10px rgba(255, 182, 193, 0.6)', duration: 0.4 })
+               .to(drawerRef.current, { boxShadow: '-10px 0 40px 10px rgba(253, 253, 150, 0.6)', duration: 0.4 })
+               .to(drawerRef.current, { boxShadow: '-10px 0 40px 10px rgba(119, 221, 119, 0.6)', duration: 0.4 })
+               .to(drawerRef.current, { boxShadow: '-10px 0 40px 10px rgba(174, 198, 207, 0.6)', duration: 0.4 })
+               .to(drawerRef.current, { boxShadow: '-10px 0 40px 10px rgba(203, 153, 201, 0.6)', duration: 0.4 })
+               .to(drawerRef.current, { boxShadow: '-15px 0 40px rgba(0,0,0,0.15)', duration: 0.8 });
+
     } else {
-      gsap.to(drawerRef.current, { x: '100%', duration: 0.4, ease: 'power3.in', boxShadow: 'none' });
+      gsap.killTweensOf(drawerRef.current);
+      gsap.to(drawerRef.current, { clipPath: 'circle(0% at 90% 90%)', duration: 0.6, ease: 'power3.inOut', boxShadow: 'none' });
     }
   }, [isOpen]);
 
-  // Auto-scroll to bottom of chat
+  useEffect(() => {
+    gsap.to(iconRef.current, { rotation: 360, duration: 10, repeat: -1, ease: "linear" });
+  }, []);
+
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, isTyping]);
 
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // 1. Add user message to UI
-    const userMessage = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMessage]);
+    const userText = input;
+    setMessages(prev => [...prev, { role: 'user', text: userText }]);
     setInput('');
     setIsTyping(true);
 
-    // 2. THIS IS WHERE YOU WILL CALL YOUR API IN PRODUCTION
-    // For now, we simulate a network delay and generate a context-aware response
-    setTimeout(() => {
-      const aiResponse = {
-        role: 'ai',
-        text: `I can certainly help with that! Since we are currently focusing on "${currentModule?.title || 'this topic'}", it's important to remember that ${currentModule?.content?.toLowerCase() || 'these systems are highly complex'}. Let me know if you want to dive deeper into specific details!`
-      };
+    try {
+      // 1. Choose the fast, intelligent Gemini model
+     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
-      setMessages(prev => [...prev, aiResponse]);
+      // 2. Build a highly specific context prompt
+      const prompt = `
+        You are a highly intelligent, encouraging biology tutor built directly into an interactive web platform.
+        Keep your answers concise, accurate, and easy to read for a student.
+
+        The user is currently studying a module titled: "${currentModule?.title || 'Biology Overview'}".
+        The content of this module is: "${currentModule?.content || 'General biological concepts'}".
+
+        User's Question: ${userText}
+      `;
+
+      // 3. Fire the request to the brain
+      const result = await model.generateContent(prompt);
+      const aiResponseText = result.response.text();
+
+      // 4. Update the chat with the real answer
+      setMessages(prev => [...prev, { role: 'ai', text: aiResponseText }]);
+
+    } catch (error) {
+      console.error("Gemini API Error:", error);
+      setMessages(prev => [...prev, { role: 'ai', text: "Whoops! My neural pathways are misfiring. Check your API key or internet connection and try again!" }]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
-    <div
-      ref={drawerRef}
-      className="fixed top-0 right-0 w-full md:w-[400px] h-screen bg-white/80 backdrop-blur-xl border-l-2 border-slate-200 z-50 flex flex-col translate-x-full"
-    >
+    <div ref={drawerRef} className="fixed top-0 right-0 w-full md:w-[450px] h-screen bg-[#FAF9F6] border-l-2 border-slate-900 z-50 flex flex-col clip-path-circle-0">
       {/* Header */}
-      <div className="p-6 border-b-2 border-slate-200 flex justify-between items-center bg-white/50">
+      <div ref={headerRef} className="p-6 border-b-2 border-slate-900 flex justify-between items-center bg-white">
         <div>
-          <h3 className="font-black text-xl text-slate-900 flex items-center gap-2">
-            <span className="text-blue-600">✦</span> AI Tutor
+          <h3 className="font-black text-2xl text-slate-900 flex items-center gap-3">
+            <span ref={iconRef} className="text-blue-600 inline-block origin-center">✦</span>
+            AI Tutor
           </h3>
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Context: {currentModule?.title || 'General'}</p>
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">
+            Context: {currentModule?.title || 'General'}
+          </p>
         </div>
-        <button
-          onClick={onClose}
-          className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-rose-100 hover:text-rose-600 transition-colors font-bold"
-        >
+        <button onClick={onClose} className="w-10 h-10 rounded-full bg-slate-100 border-2 border-transparent flex items-center justify-center text-slate-900 hover:bg-rose-100 hover:border-rose-900 hover:text-rose-900 hover:-translate-y-0.5 transition-all font-black">
           ✕
         </button>
       </div>
 
       {/* Chat History */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div ref={chatAreaRef} className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.map((msg, idx) => (
-          <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] p-4 rounded-2xl text-sm font-medium leading-relaxed ${
-              msg.role === 'user'
-                ? 'bg-blue-600 text-white rounded-tr-sm'
-                : 'bg-slate-100 text-slate-800 border-2 border-slate-200 rounded-tl-sm shadow-sm'
-            }`}>
-              {msg.text}
-            </div>
-          </div>
+          <AnimatedMessage key={idx} msg={msg} />
         ))}
-
         {isTyping && (
           <div className="flex justify-start">
-            <div className="bg-slate-100 border-2 border-slate-200 p-4 rounded-2xl rounded-tl-sm flex gap-1 items-center">
-              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            <div className="bg-white border-2 border-slate-200 p-4 rounded-2xl rounded-tl-sm flex gap-2 items-center shadow-sm">
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
             </div>
           </div>
         )}
@@ -98,20 +161,16 @@ export default function AiTutor({ isOpen, onClose, currentModule }) {
       </div>
 
       {/* Input Field */}
-      <div className="p-6 border-t-2 border-slate-200 bg-white/50">
-        <form onSubmit={handleSend} className="relative flex items-center">
+      <div ref={inputRef} className="p-6 border-t-2 border-slate-900 bg-white">
+        <form onSubmit={handleSend} className="relative flex items-center rounded-xl bg-slate-50">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about this module..."
-            className="w-full bg-slate-100 border-2 border-slate-200 rounded-xl py-4 pl-4 pr-16 text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition-all shadow-inner"
+            placeholder="Ask a question..."
+            className="w-full bg-transparent border-2 border-slate-300 rounded-xl py-4 pl-4 pr-16 text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition-all shadow-inner relative z-10"
           />
-          <button
-            type="submit"
-            disabled={!input.trim() || isTyping}
-            className="absolute right-2 w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold disabled:opacity-50 hover:enabled:-translate-y-0.5 transition-all shadow-[2px_2px_0px_#1e3a8a]"
-          >
+          <button type="submit" disabled={!input.trim() || isTyping} className="absolute right-2 w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold disabled:opacity-50 hover:enabled:-translate-y-0.5 hover:enabled:bg-blue-600 transition-all shadow-[2px_2px_0px_currentColor] z-20">
             ↑
           </button>
         </form>

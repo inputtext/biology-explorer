@@ -38,7 +38,7 @@ export default function HubPage() {
 
       <div className="space-y-16 pb-32">
         {hub.modules.map(module => {
-          if (module.type === 'interactive-model') {
+          if (module.type === 'interactive-svg') {
             return <OrganelleInspector key={module.id} moduleData={module} />;
           }
           if (module.type === 'timeline-stepper') {
@@ -85,11 +85,14 @@ export default function HubPage() {
       </div>
 
       {/* NEW: Floating Action Button */}
+{/* Enhanced Floating Action Button */}
       <button
         onClick={() => setIsAiOpen(true)}
-        className="fixed bottom-8 right-8 w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-[4px_4px_0px_#1e3a8a] hover:-translate-y-1 transition-all z-40 group"
+        className="fixed bottom-8 right-8 w-16 h-16 bg-slate-900 text-blue-400 rounded-2xl flex items-center justify-center shadow-[4px_4px_0px_#1e3a8a] hover:-translate-y-2 hover:shadow-[4px_8px_0px_#1e3a8a] transition-all z-40 group border-2 border-blue-900"
       >
-        <span className="text-2xl group-hover:scale-110 transition-transform">✦</span>
+        <span className="text-3xl group-hover:rotate-90 transition-transform duration-500 ease-out animate-pulse">✦</span>
+        {/* Subtle glowing ring behind the icon */}
+        <span className="absolute inset-0 rounded-2xl bg-blue-500 blur-md opacity-20 group-hover:opacity-40 transition-opacity"></span>
       </button>
 
       {/* NEW: The AI Drawer Component */}
