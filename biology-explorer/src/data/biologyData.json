@@ -288,6 +288,48 @@
           "content": "Deploy the Cas9 endonuclease complex to scan the genome, locate a target PAM sequence, and splice in a new synthetic gene."
         }
       ]
+    },
+    {
+      "id": "ecosystems",
+      "title": "Ecosystem Dynamics",
+      "description": "Construct and balance complex food webs to understand energy transfer.",
+      "themeColor": "mint",
+      "modules": [
+        {
+          "id": "mod-13a",
+          "title": "Food Web Weaver",
+          "type": "interactive-foodweb",
+          "content": "Drag and drop species to build a balanced ecosystem. Watch what happens when an apex predator is removed."
+        }
+      ]
+    },
+    {
+      "id": "evolution",
+      "title": "Evolution & Selection",
+      "description": "Simulate environmental pressures and watch species adapt over generations.",
+      "themeColor": "yellow",
+      "modules": [
+        {
+          "id": "mod-14a",
+          "title": "Natural Selection Sim",
+          "type": "natural-selection-sim",
+          "content": "Change the background environment and hunt for moths. See how camouflage drives survival rates."
+        }
+      ]
+    },
+    {
+      "id": "botany",
+      "title": "Plant Physiology",
+      "description": "Master the biochemical engine of the planet: Photosynthesis.",
+      "themeColor": "peach",
+      "modules": [
+        {
+          "id": "mod-15a",
+          "title": "Photosynthesis Engine",
+          "type": "photosynthesis-engine",
+          "content": "Adjust sunlight, H2O, and CO2 sliders to optimize a plant's glucose production in real-time."
+        }
+      ]
     }
   ]
 }

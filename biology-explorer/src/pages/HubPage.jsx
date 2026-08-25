@@ -2,7 +2,10 @@ import { useParams, Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import bioData from '../data/biologyData.json';
-
+import FoodWebWeaver from '../components/FoodWebWeaver';
+import EvolutionSimulator from '../components/EvolutionSimulator';
+/* import EvolutionSimulator from '../components/EvolutionSimulator'; */
+import PhotosynthesisEngine from '../components/PhotosynthesisEngine';
 // All of your hard-earned modules
 import OrganelleInspector from '../components/OrganelleInspector';
 import MitosisStepper from '../components/MitosisStepper';
@@ -96,6 +99,12 @@ export default function HubPage() {
           if (module.type === 'interactive-bloodstream') return <BloodstreamVisualizer key={module.id} moduleData={module} />;
           if (module.type === 'interactive-macrophage') return <PhagocytosisBattlefield key={module.id} moduleData={module} />;
           if (module.type === 'interactive-crispr') return <CrisprEditor key={module.id} moduleData={module} />;
+          if (module.type === 'interactive-foodweb') return <FoodWebWeaver key={module.id} moduleData={module} />;
+          if (module.type === 'natural-selection-sim') return <EvolutionSimulator key={module.id} moduleData={module} />;
+          if (module.type === 'photosynthesis-engine') return <PhotosynthesisEngine key={module.id} moduleData={module} />;
+         /*  if (module.type === 'natural-selection-sim') return <EvolutionSimulator key={module.id} moduleData={module} />; */
+          if (module.type === 'natural-selection-sim') return <EvolutionSimulator key={module.id} moduleData={module} />;
+          if (module.type === 'photosynthesis-engine') return <PhotosynthesisEngine key={module.id} moduleData={module} />;
           return null;
         })}
       </div>
