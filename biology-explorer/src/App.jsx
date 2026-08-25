@@ -5,6 +5,7 @@ import HubPage from './pages/HubPage';
 import CustomCursor from './components/CustomCursor';
 import AmbientBackground from './components/AmbientBackground';
 import CinematicDarkToggle from './components/CinematicDarkToggle';
+import CommandPalette from './components/CommandPalette';
 
 // UPGRADED: Every color now has a corresponding 'dark:' variant for a flawless night theme
 const colorMap = {
@@ -46,6 +47,7 @@ export default function App() {
         <CustomCursor />
         <AmbientBackground />
         <CinematicDarkToggle />
+        <CommandPalette />
 
         <nav className="fixed top-0 w-full bg-[#FAF9F6]/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-slate-900 dark:border-slate-700 z-50 px-6 py-4 transition-colors duration-0">
           <div className="max-w-6xl mx-auto flex justify-between items-center">

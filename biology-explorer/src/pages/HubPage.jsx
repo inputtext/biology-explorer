@@ -22,6 +22,7 @@ import BloodstreamVisualizer from '../components/BloodstreamVisualizer';
 import PhagocytosisBattlefield from '../components/PhagocytosisBattlefield';
 import CrisprEditor from '../components/CrisprEditor';
 import AiTutor from '../components/AiTutor';
+import KrebsCycle from '../components/KrebsCycle';
 
 export default function HubPage() {
   const { hubId } = useParams();
@@ -102,9 +103,10 @@ export default function HubPage() {
           if (module.type === 'interactive-foodweb') return <FoodWebWeaver key={module.id} moduleData={module} />;
           if (module.type === 'natural-selection-sim') return <EvolutionSimulator key={module.id} moduleData={module} />;
           if (module.type === 'photosynthesis-engine') return <PhotosynthesisEngine key={module.id} moduleData={module} />;
-         /*  if (module.type === 'natural-selection-sim') return <EvolutionSimulator key={module.id} moduleData={module} />; */
+          if (module.type === 'natural-selection-sim') return <EvolutionSimulator key={module.id} moduleData={module} />;
           if (module.type === 'natural-selection-sim') return <EvolutionSimulator key={module.id} moduleData={module} />;
           if (module.type === 'photosynthesis-engine') return <PhotosynthesisEngine key={module.id} moduleData={module} />;
+          if (module.type === 'krebs-cycle') return <KrebsCycle key={module.id} moduleData={module} />;
           return null;
         })}
       </div>

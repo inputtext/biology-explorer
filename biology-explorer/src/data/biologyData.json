@@ -317,7 +317,7 @@
         }
       ]
     },
-    {
+   {
       "id": "botany",
       "title": "Plant Physiology",
       "description": "Master the biochemical engine of the planet: Photosynthesis.",
@@ -328,6 +328,20 @@
           "title": "Photosynthesis Engine",
           "type": "photosynthesis-engine",
           "content": "Adjust sunlight, H2O, and CO2 sliders to optimize a plant's glucose production in real-time."
+        }
+      ]
+    },
+    {
+      "id": "cellular-respiration",
+      "title": "Cellular Respiration",
+      "description": "Dive deep into the metabolic pathways that generate cellular energy.",
+      "themeColor": "purple",
+      "modules": [
+        {
+          "id": "mod-16a",
+          "title": "The Krebs Cycle",
+          "type": "krebs-cycle",
+          "content": "Follow the carbon atoms as they are oxidized to produce ATP, NADH, and FADH2 in the mitochondrial matrix."
         }
       ]
     }
