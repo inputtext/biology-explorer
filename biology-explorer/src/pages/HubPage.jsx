@@ -59,22 +59,30 @@ export default function HubPage() {
     }
   }, [hubId]);
 
-  if (!hub) return <div className="p-24 text-center font-black text-4xl">Hub not found.</div>;
+  if (!hub) return <div className="p-24 text-center font-black text-4xl dark:text-slate-50">Hub not found.</div>;
 
   return (
-    <div className="pt-24 px-6 max-w-5xl mx-auto min-h-screen relative overflow-hidden">
-      <Link to="/" className="text-sm font-bold opacity-50 hover:opacity-100 transition-opacity flex items-center gap-2 mb-8 relative z-10">
+    <div className="pt-24 px-6 max-w-5xl mx-auto min-h-screen relative overflow-hidden transition-colors duration-0">
+
+      {/* FIXED: Added dark:text-slate-300 for the back button */}
+      <Link to="/" className="text-sm font-bold opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2 mb-8 relative z-10 text-slate-900 dark:text-slate-300">
         ← Back to Dashboard
       </Link>
 
       <header className="mb-16" ref={headerRef}>
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4 text-slate-900">{hub.title}</h1>
-        <p className="text-xl font-medium text-slate-600">{hub.description}</p>
+        {/* FIXED: Added dark:text-slate-50 */}
+        <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4 text-slate-900 dark:text-slate-50 transition-colors duration-0">
+          {hub.title}
+        </h1>
+        {/* FIXED: Added dark:text-slate-400 */}
+        <p className="text-xl font-medium text-slate-600 dark:text-slate-400 transition-colors duration-0">
+          {hub.description}
+        </p>
       </header>
 
       <div className="space-y-16 pb-32 perspective-[2000px]" ref={modulesContainerRef}>
         {hub.modules.map(module => {
-          if (module.type === 'interactive-model') return <OrganelleInspector key={module.id} moduleData={module} />;
+          if (module.type === 'interactive-svg') return <OrganelleInspector key={module.id} moduleData={module} />;
           if (module.type === 'timeline-stepper') return <MitosisStepper key={module.id} moduleData={module} />;
           if (module.type === 'scroll-reveal') return <DnaUnzipper key={module.id} moduleData={module} />;
           if (module.type === 'hierarchy-tree') return <TaxonomyTree key={module.id} moduleData={module} />;

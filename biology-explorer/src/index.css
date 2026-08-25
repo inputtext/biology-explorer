@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
+/* THIS IS THE MAGIC LINE FOR TAILWIND V4 DARK MODE */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-pastel-mint: #D4F0E4;
   --color-pastel-lilac: #E8DFF5;
@@ -9,4 +12,13 @@
 
 body {
   @apply bg-gray-50 text-slate-800 font-sans antialiased overflow-x-hidden;
+}
+
+/* Force disable the native cursor globally */
+html, body, * {
+  cursor: none !important;
+}
+/* The Nuclear Cursor Fix: Forces an invisible 1x1 SVG on every element and state */
+*, *:hover, *:active, *:focus, input, button, a {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'), none !important;
 }

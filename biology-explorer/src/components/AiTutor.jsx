@@ -1,10 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import ReactMarkdown from 'react-markdown';
 
-
-
-
-// Animated Message Component
+// Animated Message Component (Kept exactly as you had it with ReactMarkdown)
 const AnimatedMessage = ({ msg }) => {
   const bubbleRef = useRef(null);
 
@@ -22,10 +20,20 @@ const AnimatedMessage = ({ msg }) => {
         className={`max-w-[85%] p-4 text-sm font-medium leading-relaxed shadow-sm ${
           msg.role === 'user'
             ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm shadow-[2px_2px_0px_#1e3a8a]'
-            : 'bg-white border-2 border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm'
+            : 'bg-white/80 backdrop-blur-sm border-2 border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm'
         }`}
       >
-        {msg.text}
+        <ReactMarkdown
+          components={{
+            p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+            strong: ({ children }) => <strong className="font-black">{children}</strong>,
+            ul: ({ children }) => <ul className="list-disc pl-5 space-y-1 mb-2">{children}</ul>,
+            ol: ({ children }) => <ol className="list-decimal pl-5 space-y-1 mb-2">{children}</ol>,
+            li: ({ children }) => <li>{children}</li>,
+          }}
+        >
+          {msg.text}
+        </ReactMarkdown>
       </div>
     </div>
   );
@@ -41,6 +49,9 @@ export default function AiTutor({ isOpen, onClose, currentModule }) {
 
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  // NEW: Added state to track if the drawer is expanded
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const [messages, setMessages] = useState([
     { role: 'ai', text: "Hi! I'm your BioExplorer AI. I can see what you're studying. Ask me anything about this topic!" }
   ]);
@@ -72,6 +83,8 @@ export default function AiTutor({ isOpen, onClose, currentModule }) {
     } else {
       gsap.killTweensOf(drawerRef.current);
       gsap.to(drawerRef.current, { clipPath: 'circle(0% at 90% 90%)', duration: 0.6, ease: 'power3.inOut', boxShadow: 'none' });
+      // NEW: Smoothly reset width back to normal when user closes the drawer
+      setTimeout(() => setIsExpanded(false), 600);
     }
   }, [isOpen]);
 
@@ -85,62 +98,75 @@ export default function AiTutor({ isOpen, onClose, currentModule }) {
     }
   }, [messages, isTyping]);
 
-const handleSend = async (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
 
-    const userText = input;
-    setMessages(prev => [...prev, { role: 'user', text: userText }]);
+    if (!input.trim() || isTyping) return;
+
+    const userText = input.trim();
+
+    setMessages((prev) => [
+      ...prev,
+      { role: 'user', text: userText }
+    ]);
+
     setInput('');
     setIsTyping(true);
 
     try {
-      // 1. Grab the new Groq key
-      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
-
-      // 2. Define the exact system context
-      const systemPrompt = `You are a highly intelligent, encouraging biology tutor built directly into an interactive web platform. Keep your answers concise, accurate, and easy to read for a student. The user is currently studying a module titled: "${currentModule?.title || 'Biology Overview'}". The content of this module is: "${currentModule?.content || 'General biological concepts'}".`;
-
-      // 3. Fire the request to Groq's blazing-fast Llama 3.1 model
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-       body: JSON.stringify({
-          model: "mixtral-8x7b-32768", // The ultimate stable fallback
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userText }
-          ]
-        })
+        body: JSON.stringify({
+          message: userText,
+          module: {
+            title: currentModule?.title || 'Biology Overview',
+            content:
+              currentModule?.content ||
+              'General biological concepts',
+          },
+          history: messages,
+        }),
       });
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error?.message || 'Failed to fetch from Groq');
-      }
 
       const data = await response.json();
 
-      // 4. Extract the text from the standard OpenAI-style response
-      const aiResponseText = data.choices[0].message.content;
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to get AI response');
+      }
 
-      setMessages(prev => [...prev, { role: 'ai', text: aiResponseText }]);
-
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'ai',
+          text: data.response,
+        },
+      ]);
     } catch (error) {
-      console.error("Groq API Error:", error);
-      setMessages(prev => [...prev, { role: 'ai', text: `Network issue: ${error.message}.` }]);
+      console.error('AI Tutor Error:', error);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'ai',
+          text: `Sorry, I couldn't connect to the AI Tutor right now. ${error.message}`,
+        },
+      ]);
     } finally {
       setIsTyping(false);
     }
   };
 
   return (
-    <div ref={drawerRef} className="fixed top-0 right-0 w-full md:w-[450px] h-screen bg-[#FAF9F6] border-l-2 border-slate-900 z-50 flex flex-col clip-path-circle-0">
+    <div
+      ref={drawerRef}
+      // FIX 3: Replaced static md:w-[450px] with a dynamic width based on isExpanded state
+      className={`fixed top-0 right-0 h-screen bg-white/70 backdrop-blur-xl border-l-2 border-slate-900 z-50 flex flex-col clip-path-circle-0 shadow-2xl transition-[width] duration-500 ease-out w-full ${isExpanded ? 'md:w-[800px]' : 'md:w-[450px]'}`}
+    >
       {/* Header */}
-      <div ref={headerRef} className="p-6 border-b-2 border-slate-900 flex justify-between items-center bg-white">
+      <div ref={headerRef} className="p-6 border-b-2 border-slate-900 flex justify-between items-center bg-white/80 backdrop-blur-md">
         <div>
           <h3 className="font-black text-2xl text-slate-900 flex items-center gap-3">
             <span ref={iconRef} className="text-blue-600 inline-block origin-center">✦</span>
@@ -150,19 +176,36 @@ const handleSend = async (e) => {
             Context: {currentModule?.title || 'General'}
           </p>
         </div>
-        <button onClick={onClose} className="w-10 h-10 rounded-full bg-slate-100 border-2 border-transparent flex items-center justify-center text-slate-900 hover:bg-rose-100 hover:border-rose-900 hover:text-rose-900 hover:-translate-y-0.5 transition-all font-black">
-          ✕
-        </button>
+
+        {/* FIX 4: Added the Expand button next to the close button */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-10 h-10 rounded-full bg-slate-100 border-2 border-transparent flex items-center justify-center text-slate-900 hover:bg-blue-100 hover:border-blue-900 hover:text-blue-900 transition-all font-black"
+            title={isExpanded ? "Collapse" : "Expand"}
+          >
+            {isExpanded ? '→|' : '⤢'}
+          </button>
+
+          <button onClick={onClose} className="w-10 h-10 rounded-full bg-slate-100 border-2 border-transparent flex items-center justify-center text-slate-900 hover:bg-rose-100 hover:border-rose-900 hover:text-rose-900 hover:-translate-y-0.5 transition-all font-black">
+            ✕
+          </button>
+        </div>
       </div>
 
       {/* Chat History */}
-      <div ref={chatAreaRef} className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div
+        ref={chatAreaRef}
+        // FIX 1 & 2: Added data-lenis-prevent so it overrides your app's smooth scroll, and overscroll-contain so it doesn't push the background.
+        data-lenis-prevent="true"
+        className="flex-1 overflow-y-auto overscroll-contain p-6 space-y-6 scrollbar-hide"
+      >
         {messages.map((msg, idx) => (
           <AnimatedMessage key={idx} msg={msg} />
         ))}
         {isTyping && (
           <div className="flex justify-start">
-            <div className="bg-white border-2 border-slate-200 p-4 rounded-2xl rounded-tl-sm flex gap-2 items-center shadow-sm">
+            <div className="bg-white/80 backdrop-blur-sm border-2 border-slate-200 p-4 rounded-2xl rounded-tl-sm flex gap-2 items-center shadow-sm">
               <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
               <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
               <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
@@ -173,7 +216,7 @@ const handleSend = async (e) => {
       </div>
 
       {/* Input Field */}
-      <div ref={inputRef} className="p-6 border-t-2 border-slate-900 bg-white">
+      <div ref={inputRef} className="p-6 border-t-2 border-slate-900 bg-white/80 backdrop-blur-md">
         <form onSubmit={handleSend} className="relative flex items-center rounded-xl bg-slate-50">
           <input
             type="text"
