@@ -123,7 +123,51 @@
               "desc": "Two new nuclear envelopes form around the separated chromosomes. The cell prepares to divide."
             }
           ]
-        }
+        },
+        {
+  "id": "diffusion-osmosis-lab",
+  "title": "Diffusion & Osmosis Lab",
+  "type": "diffusion-osmosis-lab",
+  "content": "Experiment with concentration gradients, membrane permeability, and temperature to discover how substances move across membranes.",
+  "difficulty": "foundational",
+  "estimatedMinutes": 15,
+  "concepts": [
+    "diffusion",
+    "osmosis",
+    "concentration-gradient",
+    "cell-membrane",
+    "passive-transport"
+  ],
+  "prerequisites": [
+    "organelle-inspector"
+  ],
+  "relatedModules": [
+    "scientific-method-lab",
+    "photosynthesis-engine"
+  ],
+  "learningObjectives": [
+    "Explain how concentration gradients influence molecular movement.",
+    "Distinguish diffusion from osmosis.",
+    "Understand the role of a selectively permeable membrane.",
+    "Predict how changing concentration affects movement.",
+    "Predict whether a cell will swell, shrink, or remain stable during osmosis."
+  ],
+  "vocabulary": [
+    "diffusion",
+    "osmosis",
+    "concentration gradient",
+    "selectively permeable",
+    "hypotonic",
+    "hypertonic",
+    "isotonic"
+  ],
+  "tags": [
+    "cell-transport",
+    "diffusion",
+    "osmosis",
+    "virtual-lab"
+  ]
+}
       ]
     },
     {
