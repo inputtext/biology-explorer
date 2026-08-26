@@ -18,6 +18,7 @@ import PhotosynthesisEngine from '../components/PhotosynthesisEngine';
 import KrebsCycle from '../components/KrebsCycle';
 import ScientificMethodLab from '../components/ScientificMethodLab';
 import DiffusionOsmosisLab from '../components/DiffusionOsmosisLab';
+import GeneExpressionLab from "../components/GeneExpressionLab";
 
 export const moduleRegistry = {
   'interactive-svg': OrganelleInspector,
@@ -41,6 +42,7 @@ export const moduleRegistry = {
   'krebs-cycle': KrebsCycle,
   'scientific-method-lab': ScientificMethodLab,
   'diffusion-osmosis-lab': DiffusionOsmosisLab,
+  "gene-expression-lab": GeneExpressionLab,
 };
 
 export function getModuleComponent(type) {

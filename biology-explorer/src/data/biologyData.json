@@ -227,7 +227,39 @@
             { "left": "G", "right": "C" },
             { "left": "A", "right": "T" }
           ]
-        }
+        },
+        {
+  "id": "gene-expression-lab",
+  "title": "Gene Expression Lab",
+  "type": "gene-expression-lab",
+  "content": "Trace genetic information from DNA through transcription and translation to understand how cells build proteins.",
+  "difficulty": "intermediate",
+  "estimatedMinutes": 20,
+  "concepts": [
+    "transcription",
+    "translation",
+    "mRNA",
+    "codons",
+    "amino-acids",
+    "gene-expression",
+    "mutations"
+  ],
+  "learningObjectives": [
+    "Explain how DNA serves as a template for RNA.",
+    "Construct a complementary mRNA sequence.",
+    "Explain how ribosomes read mRNA codons.",
+    "Translate codons into amino acids.",
+    "Describe how mutations can affect proteins."
+  ],
+  "tags": [
+    "genetics",
+    "molecular-biology",
+    "gene-expression",
+    "transcription",
+    "translation",
+    "virtual-lab"
+  ]
+}
       ]
     },
     {
