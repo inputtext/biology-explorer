@@ -16,6 +16,7 @@ import FoodWebWeaver from '../components/FoodWebWeaver';
 import EvolutionSimulator from '../components/EvolutionSimulator';
 import PhotosynthesisEngine from '../components/PhotosynthesisEngine';
 import KrebsCycle from '../components/KrebsCycle';
+import ScientificMethodLab from '../components/ScientificMethodLab';
 
 export const moduleRegistry = {
   'interactive-svg': OrganelleInspector,
@@ -37,6 +38,7 @@ export const moduleRegistry = {
   'natural-selection-sim': EvolutionSimulator,
   'photosynthesis-engine': PhotosynthesisEngine,
   'krebs-cycle': KrebsCycle,
+  'scientific-method-lab': ScientificMethodLab,
 };
 
 export function getModuleComponent(type) {

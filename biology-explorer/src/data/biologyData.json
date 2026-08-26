@@ -34,7 +34,53 @@
             { "id": "bacteria", "name": "🦠 Bacteria", "isAlive": true, "reason": "Correct! Bacteria are single-celled organisms that independently perform all 7 functions of life." },
             { "id": "crystal", "name": "💎 Quartz Crystal", "isAlive": false, "reason": "Correct! Crystals grow as minerals deposit, but they do not consume energy or respond to stimuli." }
           ]
-        }
+        },
+        {
+  "id": "scientific-method-lab",
+  "title": "Scientific Method Lab",
+  "type": "scientific-method-lab",
+  "content": "Design and run a controlled experiment to investigate how environmental conditions affect plant growth.",
+  "difficulty": "foundational",
+  "estimatedMinutes": 15,
+  "concepts": [
+    "scientific-method",
+    "hypothesis",
+    "variables",
+    "controlled-experiment",
+    "data-analysis"
+  ],
+  "prerequisites": [
+    "levels-of-organization",
+    "is-it-alive"
+  ],
+  "relatedModules": [
+    "photosynthesis-engine",
+    "evolution-simulator"
+  ],
+  "learningObjectives": [
+    "Identify the major steps of the scientific method.",
+    "Distinguish observations from explanations.",
+    "Form a testable hypothesis.",
+    "Identify independent, dependent, and controlled variables.",
+    "Interpret experimental results.",
+    "Connect evidence to a scientific conclusion."
+  ],
+  "vocabulary": [
+    "observation",
+    "hypothesis",
+    "independent variable",
+    "dependent variable",
+    "control",
+    "evidence",
+    "conclusion"
+  ],
+  "tags": [
+    "scientific-method",
+    "experimentation",
+    "foundations",
+    "laboratory"
+  ]
+}
       ]
     },
     {
