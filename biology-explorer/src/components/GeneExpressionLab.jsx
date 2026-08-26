@@ -1,6 +1,20 @@
 import { useMemo, useState } from 'react';
+import useModuleProgress from '../hooks/useModuleProgress';
 
-const DNA_TEMPLATE = ['T', 'A', 'C', 'G', 'C', 'T', 'G', 'G', 'A', 'A', 'C', 'T'];
+const DNA_TEMPLATE = [
+  'T',
+  'A',
+  'C',
+  'G',
+  'C',
+  'T',
+  'G',
+  'G',
+  'A',
+  'A',
+  'C',
+  'T',
+];
 
 const DNA_TO_RNA = {
   A: 'U',
@@ -27,6 +41,8 @@ const CODON_TABLE = {
 const BASE_OPTIONS = ['A', 'U', 'C', 'G'];
 
 export default function GeneExpressionLab({ moduleData }) {
+  const moduleProgress = useModuleProgress(moduleData?.id);
+
   const [stage, setStage] = useState(0);
 
   const [rnaSequence, setRnaSequence] = useState(
@@ -63,6 +79,8 @@ export default function GeneExpressionLab({ moduleData }) {
   );
 
   const chooseBase = (index, base) => {
+    moduleProgress.start();
+
     setRnaSequence((previous) => {
       const next = [...previous];
       next[index] = base;
@@ -71,8 +89,22 @@ export default function GeneExpressionLab({ moduleData }) {
   };
 
   const nextStage = () => {
+    if (stage === 0 && !rnaCorrect) {
+      return;
+    }
+
     if (stage < 2) {
-      setStage((previous) => previous + 1);
+      const next = stage + 1;
+
+      setStage(next);
+
+      if (next === 1) {
+        moduleProgress.update(33);
+      }
+
+      if (next === 2) {
+        moduleProgress.update(66);
+      }
     }
   };
 
@@ -87,6 +119,17 @@ export default function GeneExpressionLab({ moduleData }) {
     setRnaSequence(Array(DNA_TEMPLATE.length).fill(null));
     setTranslationAnswer([]);
     setMutationIndex(null);
+
+    // Reset the visual lab state.
+    // The saved learning progress remains intact.
+  };
+
+  const handleMutation = (index) => {
+    setMutationIndex(index);
+
+    // Completing the mutation interaction completes
+    // the actual learning module.
+    moduleProgress.complete();
   };
 
   const renderTranscription = () => (
@@ -101,8 +144,8 @@ export default function GeneExpressionLab({ moduleData }) {
         </h4>
 
         <p className="mt-2 font-medium text-violet-950/70">
-          RNA polymerase reads the DNA template and builds a complementary
-          RNA strand.
+          RNA polymerase reads the DNA template and builds a
+          complementary RNA strand.
         </p>
       </div>
 
@@ -152,7 +195,9 @@ export default function GeneExpressionLab({ moduleData }) {
                 {BASE_OPTIONS.map((option) => (
                   <button
                     key={option}
-                    onClick={() => chooseBase(index, option)}
+                    onClick={() =>
+                      chooseBase(index, option)
+                    }
                     className="h-7 w-7 rounded-md border border-violet-300 bg-white text-xs font-black text-violet-900 hover:bg-violet-100"
                   >
                     {option}
@@ -196,8 +241,8 @@ export default function GeneExpressionLab({ moduleData }) {
         </h4>
 
         <p className="mt-2 font-medium text-violet-950/70">
-          Ribosomes read mRNA three bases at a time. Each codon specifies an
-          amino acid or a stop signal.
+          Ribosomes read mRNA three bases at a time. Each
+          codon specifies an amino acid or a stop signal.
         </p>
       </div>
 
@@ -253,7 +298,10 @@ export default function GeneExpressionLab({ moduleData }) {
   const renderMutation = () => {
     const mutatedCodons = [...codons];
 
-    if (mutationIndex !== null && mutatedCodons[mutationIndex]) {
+    if (
+      mutationIndex !== null &&
+      mutatedCodons[mutationIndex]
+    ) {
       const current = mutatedCodons[mutationIndex];
 
       mutatedCodons[mutationIndex] =
@@ -276,8 +324,8 @@ export default function GeneExpressionLab({ moduleData }) {
           </h4>
 
           <p className="mt-2 font-medium text-violet-950/70">
-            Mutations can change DNA and sometimes alter the resulting
-            protein.
+            Mutations can change DNA and sometimes alter the
+            resulting protein.
           </p>
         </div>
 
@@ -285,7 +333,7 @@ export default function GeneExpressionLab({ moduleData }) {
           {codons.map((codon, index) => (
             <button
               key={index}
-              onClick={() => setMutationIndex(index)}
+              onClick={() => handleMutation(index)}
               className={`rounded-2xl border-2 p-5 text-left transition-all ${
                 mutationIndex === index
                   ? 'border-violet-950 bg-violet-950 text-white'
@@ -344,7 +392,8 @@ export default function GeneExpressionLab({ moduleData }) {
             </div>
 
             <div className="mt-5 rounded-xl bg-violet-950 p-5 font-bold text-white">
-              {mutatedProtein[mutationIndex] === aminoAcids[mutationIndex]
+              {mutatedProtein[mutationIndex] ===
+              aminoAcids[mutationIndex]
                 ? 'This mutation does not change the amino acid in our simplified example.'
                 : 'The mutation changes the amino acid sequence. This is an example of how a DNA change can alter a protein.'}
             </div>
@@ -386,6 +435,19 @@ export default function GeneExpressionLab({ moduleData }) {
           <div className="text-2xl font-black text-violet-950">
             {stage + 1} / 3
           </div>
+
+          <div className="mt-1 text-xs font-black uppercase tracking-widest text-violet-600">
+            {moduleProgress.progress}% Complete
+          </div>
+
+          <div className="mt-2 h-1.5 w-24 overflow-hidden rounded-full bg-violet-100">
+            <div
+              className="h-full rounded-full bg-violet-600 transition-all duration-500"
+              style={{
+                width: `${moduleProgress.progress}%`,
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -394,7 +456,19 @@ export default function GeneExpressionLab({ moduleData }) {
           (label, index) => (
             <button
               key={label}
-              onClick={() => setStage(index)}
+              onClick={() => {
+                // Prevent jumping ahead of the actual
+                // learning sequence.
+                if (index === 1 && !rnaCorrect) {
+                  return;
+                }
+
+                if (index === 2 && !rnaCorrect) {
+                  return;
+                }
+
+                setStage(index);
+              }}
               className={`rounded-xl border-2 px-5 py-3 font-black whitespace-nowrap transition-all ${
                 stage === index
                   ? 'border-violet-950 bg-violet-950 text-white'

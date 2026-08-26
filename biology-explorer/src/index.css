@@ -22,3 +22,130 @@ html, body, * {
 *, *:hover, *:active, *:focus, input, button, a {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>'), none !important;
 }
+
+/* =========================================================
+   BIOEXPLORER INTERACTIVE HOVER SYSTEM
+   ========================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  .bio-hover {
+    transform-origin: center center;
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .bio-hover:hover {
+    transform: translateY(-5px) scale(1.035);
+  }
+
+  .bio-hover:active {
+    transform: translateY(-1px) scale(0.99);
+  }
+}
+
+.bio-module-hover {
+  transform-origin: center center;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 260ms ease;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bio-module-hover:hover {
+    transform: translateY(-6px) scale(1.018) rotateX(1deg);
+  }
+}
+
+/* =========================================================
+   BIOEXPLORER AI ORB
+   ========================================================= */
+
+.bio-ai-orb {
+  position: fixed;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.bio-ai-orb-ring {
+  position: absolute;
+  inset: -7px;
+  border: 1px solid currentColor;
+  border-radius: inherit;
+  opacity: 0.25;
+  pointer-events: none;
+  animation: ai-orb-pulse 2.8s ease-in-out infinite;
+}
+
+.bio-ai-orb-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.25),
+    transparent 70%
+  );
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition:
+    opacity 300ms ease,
+    transform 400ms ease;
+  z-index: -1;
+}
+
+.bio-ai-orb:hover .bio-ai-orb-glow {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@keyframes ai-orb-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 0.45;
+  }
+}
+
+
+/* =========================================================
+   AI TUTOR ORB — FIXED VIEWPORT VERSION
+   ========================================================= */
+
+.bio-ai-orb-visual {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  pointer-events: none;
+  transform-origin: center;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bio-ai-orb-ring,
+.bio-ai-orb-glow,
+.bio-ai-orb-core,
+.bio-ai-orb-dot {
+  pointer-events: none;
+}
+
+/* Only the visual moves/scales — NOT the fixed button */
+
+button:hover .bio-ai-orb-visual {
+  transform: scale(1.08) translateY(-3px);
+}
+
+button:active .bio-ai-orb-visual {
+  transform: scale(0.95);
+}

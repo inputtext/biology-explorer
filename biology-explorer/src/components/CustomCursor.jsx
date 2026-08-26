@@ -53,9 +53,9 @@ export default function CustomCursor() {
       else if (e.target.closest('button, a, input, [role="button"]')) {
         img.src = '/pointinghand.svg';
         gsap.to(cursor, {
-          scale: 1.2,
+          scale: 1.5,
           rotate: -15,
-          duration: 0.4,
+          duration: 0.5,
           ease: "back.out(1.5)" // UPGRADE: Bouncy tilt for buttons
         });
       }
