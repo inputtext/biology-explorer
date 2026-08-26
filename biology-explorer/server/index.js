@@ -81,7 +81,7 @@ Answer the student's question now.
 `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-3.6-flash', // Matching what worked yesterday!
       contents: prompt,
     });
 
