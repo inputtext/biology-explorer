@@ -6,6 +6,8 @@ import CustomCursor from './components/CustomCursor';
 import AmbientBackground from './components/AmbientBackground';
 import CinematicDarkToggle from './components/CinematicDarkToggle';
 import CommandPalette from './components/CommandPalette';
+import PageTransition from './components/PageTransition';
+import LearningMap from './components/LearningMap';
 
 // UPGRADED: Every color now has a corresponding 'dark:' variant for a flawless night theme
 const colorMap = {
@@ -20,22 +22,32 @@ const HomeDashboard = () => (
     <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-8 text-slate-900 dark:text-white transition-colors duration-0">
       Learning Ecosystem
     </h1>
+
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {bioData.hubs.map((hub, index) => (
         <Link
           key={hub.id}
           to={`/hub/${hub.id}`}
-          // We kept hover:shadow-[6px_6px_0px_currentColor] because currentColor dynamically pulls from your text color!
-          className={`block p-8 border-2 rounded-2xl transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_currentColor] ${colorMap[hub.themeColor] || colorMap.mint}`}
+          className={`block p-8 border-2 rounded-2xl transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_currentColor] ${
+            colorMap[hub.themeColor] || colorMap.mint
+          }`}
         >
           <span className="text-xs font-black uppercase tracking-widest opacity-70 block mb-2">
-            Phase {index + 1}
+            Phase {String(index + 1).padStart(2, '0')}
           </span>
-          <h2 className="text-2xl font-bold mb-2">{hub.title}</h2>
-          <p className="font-medium opacity-80">{hub.description}</p>
+
+          <h2 className="text-2xl font-bold mb-2">
+            {hub.title}
+          </h2>
+
+          <p className="font-medium opacity-80">
+            {hub.description}
+          </p>
         </Link>
       ))}
     </div>
+
+    <LearningMap />
   </div>
 );
 
@@ -58,10 +70,12 @@ export default function App() {
           </div>
         </nav>
 
-        <Routes>
-          <Route path="/" element={<HomeDashboard />} />
-          <Route path="/hub/:hubId" element={<HubPage />} />
-        </Routes>
+        <PageTransition>
+  <Routes>
+    <Route path="/" element={<HomeDashboard />} />
+    <Route path="/hub/:hubId" element={<HubPage />} />
+  </Routes>
+</PageTransition>
       </div>
     </ReactLenis>
   );
